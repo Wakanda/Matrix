@@ -1,0 +1,23 @@
+.waf-matrix2 {
+    overflow: auto;
+}
+
+.waf-matrix2>div {
+    position: relative;
+}
+.waf-matrix2>div>div.well {
+    position: absolute;
+    overflow: hidden;
+    width: 200px;
+    height:200px;
+}
+.waf-matrix2>div>div.well.waf-state-selected {
+    box-shadow: 0px 0px 20px rgba(0,0,100, 0.5);
+}
+
+.waf-matrix2>div>div.well.waf-studio-donotsave {
+    font-size: 24px;
+    padding: 10px;
+    opacity: .5;
+    color: #ccc;
+}

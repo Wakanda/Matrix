@@ -1,0 +1,6 @@
+.waf-matrix2 {
+    overflow: hidden;
+}
+.waf-matrix2>div.well.waf-studio-donotsave {
+    opacity: .8;
+}

@@ -1,0 +1,29 @@
+{
+    "name": "Matrix",
+    "type": "widget",
+    "studioName": "Matrix",
+    "category": "Containers/Placeholders",
+    "iconPath": "/icons/widget.png",
+    "author": "Wakanda SAS",
+    "contributors": [
+        "Vincent Thibault",
+        "Stéphane Puybareau"
+    ],
+    "version": "1.0.0",
+    "copyright": "(c) 2015 Wakanda SAS",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Wakanda/Matrix.git"
+    },
+    "keywords": ["wakanda", "widget", "matrix", "matrice"],
+    "engines": {"wakanda": ">= 11"},
+    "license": "MIT",
+    "externalWidgets" : [],
+    "loadDependencies": [
+        {"package": "Container"},
+        {"file": "widget.js"},
+        {"file": "css/widget.css"},
+        {"file": "designer.js", "studioOnly": true},
+        {"file": "css/designer.css", "studioOnly": true}
+    ]
+}
