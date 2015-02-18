@@ -43,49 +43,45 @@ WAF.define('Matrix', ['waf-core/widget', 'Container'], function(widget, Containe
         return new RegExp('#' + id + '($|[,. :\\[])');
     }
 
-    function getRules(id) {
-        var rules, styles, regexp, res;
-        var i, j, count, size;
+    var getRules = (function() {
+        var _cache = {};
 
-        regexp = getSelectorRegExp(id);
-        styles = document.styleSheets;
-        count  = styles ? styles.length : 0;
-        res    = [];
+        return function getRules(id) {
+            // Get back cached CSS
+            if (id in _cache) {
+                return _cache[id];
+            }
 
-        for (i = 0; i < count; i++) {
-            rules = styles[i].cssRules || styles[i].rules;
-            size  = rules.length;
+            // Not ready yet
+            if (!document.styleSheets) {
+                return '';
+            }
 
-            for (j = 0; j < size; j++) {
-                if (regexp.test(rules[j].selectorText)) {
-                    res.push(rules[j]);
+            var rules, styles, regexp, res;
+            var i, j, count, size;
+
+            regexp = getSelectorRegExp(id);
+            styles = document.styleSheets;
+            count  = styles.length;
+            res    = [];
+
+            for (i = 0; i < count; i++) {
+                rules = styles[i].cssRules || styles[i].rules;
+                size  = rules.length;
+
+                for (j = 0; j < size; j++) {
+                    if (regexp.test(rules[j].selectorText)) {
+                        res.push(rules[j].style.cssText);
+                    }
                 }
             }
-        }
 
-        return res;
-    }
-
-    function upgradeRules(id, newClass) {
-        var regexp    = getSelectorRegExp(id);
-        var separator = / *, */;
-        getRules(id).forEach(function(rule) {
-            var selectors = rule.selectorText.split(separator);
-            selectors.some(function(selector) {
-                if (regexp.test(selector)) {
-                    selectors.push(selector.replace(regexp, '.' + newClass));
-                    return true;
-                }
-                return false;
-            });
-            rule.selectorText = selectors.join(', ');
-        });
-    }
+            return (_cache[id] = res.join(';'));
+        };
+    })();
 
     function upgradeWidgetAndRules(widget) {
-        var newClass = 'waf-clone-' + widget.node.id;
-        upgradeRules(widget.node.id, newClass);
-        widget.addClass(newClass);
+        widget.node.style.cssText = getRules(widget.node.id);
     }
 
     proto._getColumnsAvailableSize = function() {
@@ -186,13 +182,24 @@ WAF.define('Matrix', ['waf-core/widget', 'Container'], function(widget, Containe
 
         this.collection.subscribe('currentElementChange', function() {
             var position, widget;
-
             position = this.collection().getPosition();
             widget   = this.widgetByPosition(position);
 
             this.invoke('removeClass', 'waf-state-selected');
             if (widget) {
                 widget.addClass('waf-state-selected');
+            }
+
+            var scrolling = {};
+            var key = 'scroll' + (this.isHorizontalScroll() ? 'Left' : 'Top');
+            var pos = Math.max(0, this._getTop(position) - 40);
+            var scroller = $(scrolled).parent();
+            var size = this.isHorizontalScroll() ? this.width() : this.height();
+
+            if (pos < scroller[key]() ||
+                pos > scroller[key]() + size ) {
+                scrolling[key] = pos;
+                $(scrolled).parent().animate(scrolling, 500);
             }
         }, this);
     };
