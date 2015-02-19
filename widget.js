@@ -4,7 +4,7 @@ WAF.define('Matrix', ['waf-core/widget', 'Container'], function(widget, Containe
     var Matrix = widget.create('Matrix', {
         collection: widget.property({
             type: 'datasource',
-            pageSize: 40,
+            pageSize: 20,
             bindable: true
         }),
         direction: widget.property({
@@ -37,6 +37,7 @@ WAF.define('Matrix', ['waf-core/widget', 'Container'], function(widget, Containe
 
     Matrix.inherit('waf-behavior/layout/repeater-livescroll');
     Matrix.linkDatasourcePropertyToRepeater('collection');
+    Matrix.repeaterReuseClonedWidgets();
     Matrix.repeatedWidget(Container);
 
     function getSelectorRegExp(id) {
