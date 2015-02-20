@@ -44,45 +44,36 @@ WAF.define('Matrix', ['waf-core/widget', 'Container'], function(widget, Containe
         return new RegExp('#' + id + '($|[,. :\\[])');
     }
 
-    var getRules = (function() {
-        var _cache = {};
+    function addRules(id, newClass) {
+        // Not ready yet
+        if (!document.styleSheets) {
+            return;
+        }
 
-        return function getRules(id) {
-            // Get back cached CSS
-            if (id in _cache) {
-                return _cache[id];
-            }
+        var rules, styles, regexp, res;
+        var i, j, count, size;
 
-            // Not ready yet
-            if (!document.styleSheets) {
-                return '';
-            }
+        regexp = getSelectorRegExp(id);
+        styles = document.styleSheets;
+        count  = styles.length;
+        res    = [];
 
-            var rules, styles, regexp, res;
-            var i, j, count, size;
+        for (i = 0; i < count; i++) {
+            rules = styles[i].cssRules || styles[i].rules;
+            size  = rules.length;
 
-            regexp = getSelectorRegExp(id);
-            styles = document.styleSheets;
-            count  = styles.length;
-            res    = [];
-
-            for (i = 0; i < count; i++) {
-                rules = styles[i].cssRules || styles[i].rules;
-                size  = rules.length;
-
-                for (j = 0; j < size; j++) {
-                    if (regexp.test(rules[j].selectorText)) {
-                        res.push(rules[j].style.cssText);
-                    }
+            for (j = 0; j < size; j++) {
+                if (regexp.test(rules[j].selectorText)) {
+                    styles[i].insertRule('.' + newClass + '{' + rules[j].style.cssText + '}', 0);
                 }
             }
-
-            return (_cache[id] = res.join(';'));
-        };
-    })();
+        }
+    }
 
     function upgradeWidgetAndRules(widget) {
-        widget.node.style.cssText = getRules(widget.node.id);
+        var newClass = 'waf-clone-' + widget.node.id;
+        addRules(widget.node.id, newClass);
+        widget.addClass(newClass);
     }
 
     proto._getColumnsAvailableSize = function() {
@@ -162,6 +153,11 @@ WAF.define('Matrix', ['waf-core/widget', 'Container'], function(widget, Containe
         return this.direction() === 'horizontal';
     };
 
+    proto.getThreshold = function() {
+        var size = this.isHorizontalScroll() ? this.node.clientWidth : this.node.clientHeight;
+        return Math.ceil(size / this.getRowSize() / 2) * this.getItemsPerRow();
+    };
+
     proto.init = function() {
         var scrolled = this.getScrolledNode();
 
@@ -197,8 +193,7 @@ WAF.define('Matrix', ['waf-core/widget', 'Container'], function(widget, Containe
             var scroller = $(scrolled).parent();
             var size = this.isHorizontalScroll() ? this.width() : this.height();
 
-            if (pos < scroller[key]() ||
-                pos > scroller[key]() + size ) {
+            if (pos < scroller[key]() || pos > scroller[key]() + size) {
                 scrolling[key] = pos;
                 $(scrolled).parent().animate(scrolling, 500);
             }

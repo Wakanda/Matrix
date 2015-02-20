@@ -66,7 +66,6 @@
 
     Matrix.studioOnResize(updateSize);
     Matrix.containerChildrenAreSubWidgets();
-    //Matrix._containerDisableCustomNodes = false;
 
     Matrix.doAfter('init', function() {
         this.direction.onChange(updateSize);
@@ -118,7 +117,7 @@
         var Container = WAF.require('Container');
         return function(position) {
             var widget = new Container();
-            widget.node.innerHTML = position + 1;
+            widget.node.textContent = position + 1;
             return widget;
         };
     })();
