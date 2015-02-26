@@ -21,6 +21,7 @@
     "externalWidgets" : [],
     "loadDependencies": [
         {"package": "Container"},
+        {"package": "Label"},
         {"file": "widget.js"},
         {"file": "css/widget.css"},
         {"file": "designer.js", "studioOnly": true},
