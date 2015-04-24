@@ -1,6 +1,9 @@
 .waf-matrix2 {
     overflow: hidden;
 }
-.waf-matrix2>div.well.waf-studio-donotsave {
-    opacity: .8;
+.waf-matrix2>div>div.waf-studio-donotsave {
+    font-size: 24px;
+    padding: 10px;
+    opacity: .5;
+    color: #ccc;
 }

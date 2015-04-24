@@ -1,23 +1,42 @@
 .waf-matrix2 {
     overflow: auto;
+    padding:10px;
+    will-change: scroll-position;
+    -webkit-overflow-scrolling:touch;
 }
 
 .waf-matrix2>div {
     position: relative;
 }
-.waf-matrix2>div>div.well {
+.waf-matrix2>div>div {
     position: absolute;
     overflow: hidden;
     width: 200px;
     height:200px;
 }
-.waf-matrix2>div>div.well.waf-state-selected {
-    box-shadow: 0px 0px 20px rgba(0,0,100, 0.5);
-}
 
-.waf-matrix2>div>div.well.waf-studio-donotsave {
-    font-size: 24px;
-    padding: 10px;
-    opacity: .5;
-    color: #ccc;
+/*
+.waf-matrix2>div>div.well::before {
+    opacity:0;
+    position:absolute;
+    top:0px;
+    left:0px;
+    bottom:0px;
+    right:0px;
+    background-image:url('../images/loading.gif');
+    background-repeat:no-repeat;
+    background-position:center;
+    content:"";
+    transition:opacity 0.5s;
+    will-change:opacity;
+}
+.waf-matrix2>div>div.well.waf-state-loading::before {
+    opacity:1;
+}
+*/
+.waf-matrix2>div>div.well.waf-state-loading>* { opacity:0; transition: opacity 0.0s; }
+.waf-matrix2>div>div.well>* { transition: opacity 0.5s; will-change:opacity; }
+.waf-matrix2>div>div.well.waf-state-selected {
+    box-shadow: 0px 0px 20px rgba(0,0,100,0.5);
+    z-index:1;
 }
